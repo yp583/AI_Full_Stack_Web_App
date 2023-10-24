@@ -1,0 +1,90 @@
+{% load static %}
+{% load mathfilters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Neural Network</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'websocket.css' %}">
+</head>
+  
+<body>
+  
+  <div class="horizontal_container">
+    <button id = "tab-btn-1" type="button" class="btn btn-info" style = "padding: 3px 12%; margin: 0px 0.7%" onclick="switchtab(1)">Architecture</button>
+    <button id = "tab-btn-2" type="button" class="btn btn-light" style = "padding: 3px 12%; margin: 0px 0.7%; border: 1px solid grey" onclick="switchtab(2)">Training</button>
+  </div>
+
+  <div id="tab-content-1">
+    <output id="layers_num_txt" style = "text-align:center">Number of Layers: 2</output>
+    <input type="range" style = "width: 92%; margin: 1% 4%" class="form-range" min="2" max="10" step="1" id="layers_num" value = 2 oninput="layers_num_txt.value = 'Number of Layers: ' + this.value.toString()">
+    <button type="button" class="btn btn-info" style = "padding: 3px 12%; margin: 1% 0.7%" onclick="update_layers(layers_num.value)">Update Model</button>
+    <div style="position: relative">
+      <canvas id="myCanvas" width="0" height="0" style="border:1px solid #000000; position:absolute"></canvas>
+      {% for i in 10|get_range %}
+        <button type="button" class="btn btn-success" id='add-node-btn-{{ i }}' style = "position: absolute; display:none" onclick="add_node({{ i }})"> + </button>
+        <button type="button" class="btn btn-danger" id='del-node-btn-{{ i }}' style = "position: absolute; display:none" onclick="delete_node({{ i }})"> - </button>
+      {% endfor %} 
+    </div>
+    <!--
+    <div id="layer-container" class="flex-parent-element" style="padding-top: 5%">
+      {% for i in 10|get_range %}
+        <div id = "arch-node-container-{{ i }}" class="flex-child-element" style = "display: none">
+          {% for i in 7|get_range %}
+            <div id = "arch-node-{{ i }}" class="graph-node" style = "margin-bottom: 20px"></div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    -->
+    </div>
+  </div>
+
+
+
+  <div id="tab-content-2" style="display:none">
+    <div class = "flex-parent-element">
+      <div class = "flex-child-element">
+        <h3 style="margin-left:5%">Model Hyperparameters</h3>
+        <div style="text-align:center">
+            <div style="padding:0.5%"> 
+              <output id="epoch_num">Number of Epochs: 1000</output>
+              <input type="range" style = "width: 92%; margin: 0px 4%" class="form-range" min="100" max="2000" step="10" id="epoch" value = 1000 oninput="epoch_num.value = 'Number of Epochs: ' + this.value.toString()">
+              <output id="batch_num">Batch Size: 1</output>
+              <input type="range" style = "width: 92%; margin: 0px 4%" class="form-range" min="1" max="50" step="1" id="batch_size" value = 1 oninput="batch_num.value = 'Batch Size: ' + this.value.toString()">
+            </div>
+            <h4 id="training_txt">Not Training</h4><br>
+            <div class = "horizontal_container"> 
+              <button type="button" class="btn btn-info" style = "padding: 3px 12%; margin: 0px 0.7%" onclick="starttraining()">Train</button>
+              <button type="button" class="btn btn-info" style = "padding: 3px 12%; margin: 0px 0.7%" onclick="reset()">Reset</button>
+            </div>
+          </div>
+        </div>
+        <div class = "flex-child-element">
+          <h3 style="margin-left:5%">Data Generation Parameters</h3>
+          <div style="text-align:center">
+            <div style = "padding:0.5%; padding-top: 1%;">
+              Random Seed: <input type="text" id="random_seed" value = 20> <br><br>
+              <output id="noise_num">Noise: 0.25</output>
+              <input type="range" style = "width: 92%; margin: 0px 4%" class="form-range" min="0" max="1" step="0.01" id="noise" value = 0.25 oninput="noise_num.value = 'Noise: ' + this.value.toString()">
+            </div>
+            <br><br><br>
+            <button type="button" class="btn btn-info" style = "padding: 3px 25%; margin: 0px 0.7%" onclick="send_data_gen()">Update Data</button>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:center; padding:0px 0px 5% 0px">
+        <h3>Generated Data</h3>
+        <div class = "border">
+            {% for data_point in data_info %}
+              <div id = "graph-datapoint-{{ forloop.counter0 }}" class="dot" style="right: {{data_point.0}}%; top: {{data_point.1}}%; background-color: {{data_point.2}};"></div>
+            {% endfor %}
+        </div>
+      </div>
+    </div>
+    <script src="{% static 'websocket.js' %}"></script>
+</body>
+  
+</html>

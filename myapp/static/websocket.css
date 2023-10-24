@@ -1,0 +1,59 @@
+div.border {
+    position: relative;
+    width: 80%;
+    height: 400px;
+    margin:auto;
+    border: 3px solid #73AD21;
+  }
+  div.dot {
+    position: absolute;
+    top:0%;
+    right:0%;
+
+    height: 5px;
+    width: 5px;
+    transition: background-color 1s ease-out;
+    transition: top 1s ease-out; 
+    transition: right 1s ease-out; 
+    background-color: #E6A116;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  div.horizontal_container {
+    padding: 10px 0px;
+    width: 100%;
+    height: auto;
+    margin:auto;
+  }
+  .flex-parent-element {
+    display: flex;
+    width: 100%;
+  }
+
+  .flex-child-element {
+    flex: 1;
+    margin: 10px;
+  }
+
+  .flex-child-element:first-child {
+    margin-right: 20px;
+  }
+
+  div.graph-node {
+    margin-left: 50%;
+    height: 20px;
+    width: 20px;
+    background-color: #d0d0d0;
+    border: 2px solid grey;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .square {
+    width: 50%;
+  }
+  
+  .square:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+  }
